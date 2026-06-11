@@ -1,5 +1,5 @@
 import json
-import psycopg2
+import pg8000
 import os
 import datetime
 
@@ -15,7 +15,7 @@ def lambda_handler(event, context):
         }
 
     try:
-        conn = psycopg2.connect(
+        conn = pg8000.connect(
             host=os.environ.get('DB_HOST'),
             database=os.environ.get('DB_NAME'),
             user=os.environ.get('DB_USER'),
@@ -23,15 +23,15 @@ def lambda_handler(event, context):
             port=5432
         )
 
-        cur = conn.cursor()
+        cursor = conn.cursor()
 
-        cur.execute("""
-            INSERT INTO clicks (link_id, ip_address, user_agent, clicked_at)
-            VALUES (%s, %s, %s, %s)
-        """, (link_id, ip_address, user_agent, datetime.datetime.utcnow()))
+        cursor.execute(
+            "INSERT INTO clicks (link_id, ip_address, user_agent, clicked_at) VALUES (%s, %s, %s, %s)",
+            (link_id, ip_address, user_agent, datetime.datetime.utcnow())
+        )
 
         conn.commit()
-        cur.close()
+        cursor.close()
         conn.close()
 
         return {

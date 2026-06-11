@@ -11,3 +11,12 @@ __pycache__/
 
 # Docker
 *.env
+
+#Lambda
+lambda/env_config.json
+lambda/package/
+lambda/lambda_build/
+lambda/lambda.zip
+lambda/lambda_fixed.zip
+lambda/payload.json
+lambda/response.json
